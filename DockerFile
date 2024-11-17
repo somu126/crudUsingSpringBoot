@@ -1,0 +1,22 @@
+FROM maven:3.9.8-amazoncorretto-17-al2823 AS build
+
+WORKDIR /app
+
+COPY pom.xml
+
+COPY sro./src
+
+
+RUN mvn clean package -DskipTests
+
+#Use OpenJDK to run the application
+
+FROM openjdk:24-slim-bullseye
+
+WORKDIR /app
+
+COPY--from-build/app/target/employee-0.0.1-SNAPSHOT.war app.war
+
+EXPOSE 8081
+
+ENTRYPOINT java", "-jar", "app.war"]
